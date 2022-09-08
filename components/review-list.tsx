@@ -14,7 +14,15 @@ type ReviewObject = {
     comment: string
 };
 
-const ReviewObjectExample = {
+/*
+type ReviewArray = {
+    reviews: ReviewObject[]
+};
+*/
+
+type ReviewArray = Array<ReviewObject>;
+
+const ReviewObjectExample = [{
     id: 2,
     user: 'string',
     toilet: 'string',
@@ -26,11 +34,15 @@ const ReviewObjectExample = {
         cleanliness: 4,
     },
     comment: 'string'
-};
+}];
+
+interface ReviewListProps {
+    currentReviews: ReviewObject[],
+}
 
 //type ReviewArray = Array<object>
 
-export default function ReviewList(currentReviews: ReviewObject[]) {
+export default function ReviewList({currentReviews}: ReviewListProps) {
     if(currentReviews.length > 0) {
         return( <div className="bootcamper-display">
         {currentReviews.map((item) => (
