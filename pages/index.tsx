@@ -2,8 +2,12 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 //import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { Button } from '@chakra-ui/react'
+//import Router from 'next/dist/server/router'
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+  const router = useRouter();
   return (
     <div className={styles.container}>
       <Head>
@@ -16,6 +20,11 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Rate a toilet here!
         </h1>
+        <Button colorScheme='blue' onClick={() => {
+            router.push({
+              pathname: "/example-toilet",
+            });
+          }}>Review example toilet</Button>
       </main>
       <footer className={styles.footer}>
       </footer>
