@@ -5,15 +5,16 @@ type propsType = {
     size: number
     score: number
     active: boolean
-    text: string
+    criterion: string
 }
 
-export default function StarRating({size, score, active, text}: propsType) {
+export default function StarRating({size, score, active, criterion}: propsType) {
     //const textSize = String(size*10) + 'pt'
     const textSize = size*10;
-    return(<section style={{fontSize: textSize}}>
-        <Heading size={String(size)+'pt'}>{text}</Heading>
-        <StarRatingComponent name={text} value={score} editing={false} renderStarIconHalf={() => {
+    if(score>=0 && !active) {
+      return(<section style={{fontSize: textSize}}>
+        <Heading size={String(size)+'pt'}>{criterion}</Heading>
+        <StarRatingComponent name={criterion} value={score} editing={false} renderStarIconHalf={() => {
               return (
                 <span>
                   <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
@@ -22,5 +23,13 @@ export default function StarRating({size, score, active, text}: propsType) {
               )}}></StarRatingComponent>
         {/* Note that your half-stars may not render properly without a function 
         to render them - see https://www.npmjs.com/package/react-star-rating-component */}
-    </section>)
+      </section>)
+    } else if (!active) {
+      return(<section>     </section>)
+    } /*else if (active && score) {
+
+    }*/
+    else{
+      return(<section>No Review</section>)
+    }
 }

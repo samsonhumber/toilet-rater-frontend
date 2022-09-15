@@ -1,66 +1,66 @@
+import { useEffect, useState } from 'react';
 import ReviewTile from './review-tile';
+import { getReviews } from '../hooks/getReviews'
 
-type ReviewObject = {
-    id: number;
+type RatingArray = Object[];
+
+export type ReviewObject = {
     user: string;
     toilet: string;
-    gridRef: string;
-    stars: {
-        overall: number;
-        experience: number;
-        decor: number;
-        cleanliness: number;
-    };
+    gridref: string;
+    time: string;
+    ratings: Object[]
     comment: string
 };
 
-/*
-type ReviewArray = {
-    reviews: ReviewObject[]
-};
-*/
-
 type ReviewArray = Array<ReviewObject>;
 
-const ReviewObjectExample = [{
-    id: 2,
-    user: 'string',
-    toilet: 'string',
-    gridRef: 'string',
-    stars: {
-        overall: 1,
-        experience: 2,
-        decor: 3,
-        cleanliness: 4,
-    },
-    comment: 'string'
-}];
-
-interface ReviewListProps {
-    currentReviews: ReviewObject[],
+type propsType = {
+    toiletName: string,
+    gridRef: string
 }
 
 //type ReviewArray = Array<object>
 
-export default function ReviewList({currentReviews}: ReviewListProps) {
-    if(currentReviews.length > 0) {
+export default function ReviewList({toiletName, gridRef}: propsType) {
+    const [reviewsFromServer] = getReviews(toiletName, gridRef);
+    function extractRatings(ratingArray: RatingArray) {
+        let ratings: {[key: string]: number} = {};
+        for (let i=0; i<ratingArray.length; i++) {
+            let ratingKey = Object.keys(ratingArray[i])[0];
+            let ratingValue = Number(Object.values(ratingArray[i])[0])
+            ratings[ratingKey]=ratingValue;
+        };
+        return ratings
+    }
+
+    let reviewKey = -1;
+    console.log(reviewsFromServer.length);
+    if(reviewsFromServer.length > 0) {
         return( <div className="bootcamper-display">
-        {currentReviews.map((item) => (
+        {reviewsFromServer.map((item: ReviewObject) => {reviewKey+=1; const ratings=extractRatings(item.ratings)
+          return (
             <ReviewTile
-            key={item.id}
+            key={reviewKey}
+            ratings={ratings}
             userName={item.user}
             toiletName={item.toilet}
-            gridRef={item.gridRef}
-            overallStar={item.stars.overall}
-            cleanStar={item.stars.cleanliness}
-            uxStar={item.stars.experience}
-            decorStar={item.stars.decor}
+            gridRef={item.gridref}
             comment={item.comment}
+            time={item.time}
             />
-        ))
+          )}
+        )
       }
       </div> )
-      } else {
-        return(<h2>{'No reviews have been published for this toilet: be the first'}</h2>)
+    } else {
+        return(<h2 className='No-Reviews-Message'>{'No reviews have been published for this toilet: be the first'}</h2>)
     }
 }
+
+/*
+overallStar={item.ratings.overall}
+            cleanStar={item.ratings.cleanliness}
+            uxStar={item.ratings.experience}
+            decorStar={item.ratings.decor}
+*/

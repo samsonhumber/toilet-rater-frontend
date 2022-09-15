@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import styles from '../styles/Home.module.css';
 import Head from 'next/head';
 import ReviewList from '../components/review-list';
-import {exampleToiletData} from '../lib/exampleToilet';
+//import {exampleToiletData} from '../lib/exampleToilet';
 
-type ReviewObject = {
+/*type ReviewObject = {
     id: number
     user: string;
     toilet: string;
@@ -17,10 +17,12 @@ type ReviewObject = {
         cleanliness: number;
     };
     comment: string
-};
+};*/
 
 const ExampleToliet: NextPage = () => {
     const router = useRouter();
+    const toiletName = 'Yelverton WC';
+    const gridRef = 'YX241365';
     return (<div className={styles.container}>
         <Head>
           <title>Rate a toilet - example toilet</title>
@@ -32,7 +34,7 @@ const ExampleToliet: NextPage = () => {
           <h1 className={styles.title}>
             Example Toilet
           </h1>
-          <ReviewList currentReviews={exampleToiletData}/>
+          <ReviewList toiletName={toiletName} gridRef={gridRef}/>
         </main>
       </div>)
 }
