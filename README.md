@@ -1,5 +1,6 @@
 # toilet-rater-frontend
 ### An app to allow users to rate bathrooms in public spaces and view ratings by others.
+### The link to the current server for this is [toilet-rater-backend](https://github.com/samsonhumber/toilet-rater-backend). As of 14/09/2022, neither has been deployed yet
 
 ### MVP plan:
 - The main thing is Next.js, because routing is easier
