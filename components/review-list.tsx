@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReviewTile from './review-tile';
-import { getReviews } from '../hooks/getReviews'
+import { useGetReviews } from '../hooks/useGetReviews'
 
 type RatingArray = Object[];
 
@@ -23,7 +23,7 @@ type propsType = {
 //type ReviewArray = Array<object>
 
 export default function ReviewList({toiletName, gridRef}: propsType) {
-    const [reviewsFromServer] = getReviews(toiletName, gridRef);
+    const [reviewsFromServer] = useGetReviews(toiletName, gridRef);
     function extractRatings(ratingArray: RatingArray) {
         let ratings: {[key: string]: number} = {};
         for (let i=0; i<ratingArray.length; i++) {

@@ -4,7 +4,7 @@ import { ReviewObject } from '../components/review-list';
 // This hook should dynamically fetch the review data from front when search parameters changed
 // Much planning is still required
 
-const getReviews = function GetReviews(toiletName: string, gridRef: string) {
+const useGetReviews = function GetReviews(toiletName: string, gridRef: string) {
     const [reviewsFromServer, setReviewsFromServer] = useState<ReviewObject[]>([]);
     useEffect(() => {
         async function getReviewsFromServer() {
@@ -19,7 +19,7 @@ const getReviews = function GetReviews(toiletName: string, gridRef: string) {
     return [reviewsFromServer]
 }
 
-export { getReviews }
+export { useGetReviews }
 
 /*
 type queryValues = {
