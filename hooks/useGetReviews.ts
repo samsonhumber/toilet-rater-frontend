@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react';
 import { ReviewObject } from '../components/review-list';
+//import dotenv from 'dotenv';
+//dotenv.config();
 
 // This hook should dynamically fetch the review data from front when search parameters changed
 // Much planning is still required
 
 const useGetReviews = function GetReviews(toiletName: string, gridRef: string) {
     const [reviewsFromServer, setReviewsFromServer] = useState<ReviewObject[]>([]);
+    const [hasLoaded, setHasLoaded] = useState<boolean>(false);
     useEffect(() => {
         async function getReviewsFromServer() {
-            const fetchUrl = `http://localhost:9000/toiletreviews?toilet=${toiletName}&gridref=${gridRef}`;
+            const urlStem = process.env.NEXT_PUBLIC_SERVER_API || "http://localhost:9000";
+            const fetchUrl = `${urlStem}/toiletreviews?toilet=${toiletName}&gridref=${gridRef}`;
             const response = await fetch(fetchUrl);
             const currentReviews = await response.json();
             console.log(currentReviews);
+            setHasLoaded(currentReviews.success);
             setReviewsFromServer(currentReviews.payload);
         }
         getReviewsFromServer();
     }, [gridRef, toiletName]);
-    return [reviewsFromServer]
+    return {reviewsFromServer, hasLoaded}
 }
 
 export { useGetReviews }

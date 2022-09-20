@@ -29,6 +29,6 @@ export default function StarRatingList({otherRatingKeys, otherRatings}: propsTyp
         </div>)
     }
     else {
-        return(<h2>{'No reviews have been published for this toilet: be the first'}</h2>)
+        return(<></>)
     }
 }

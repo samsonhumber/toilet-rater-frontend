@@ -28,7 +28,7 @@ export default function ReviewList({ratings, userName, toiletName, gridRef, comm
   delete otherRatings.overall
   const otherRatingKeys = Object.keys(otherRatings);
     return(
-      <Box boxShadow='lg' p='6' rounded='md' bg='white'>
+      <Box className='Review-Tile' boxShadow='lg' p='6' rounded='md' bg='white'>
         <h2>{toiletName} in {gridRef}</h2>
         <h2>Reviewed by {userName}</h2>
         <StarRating size={2} score={overall} active={false} criterion={'overall'}></StarRating>

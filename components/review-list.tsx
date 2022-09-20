@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ReviewTile from './review-tile';
 import { useGetReviews } from '../hooks/useGetReviews'
+import NoReviewsMessage from './unfinished/no-reviews-message';
 
 type RatingArray = Object[];
 
@@ -23,7 +24,7 @@ type propsType = {
 //type ReviewArray = Array<object>
 
 export default function ReviewList({toiletName, gridRef}: propsType) {
-    const [reviewsFromServer] = useGetReviews(toiletName, gridRef);
+    const {reviewsFromServer, hasLoaded} = useGetReviews(toiletName, gridRef);
     function extractRatings(ratingArray: RatingArray) {
         let ratings: {[key: string]: number} = {};
         for (let i=0; i<ratingArray.length; i++) {
@@ -35,8 +36,7 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
     }
 
     let reviewKey = -1;
-    console.log(reviewsFromServer.length);
-    if(reviewsFromServer.length > 0) {
+    console.log(reviewsFromServer.length, hasLoaded);
         return( <div className="bootcamper-display">
         {reviewsFromServer.map((item: ReviewObject) => {reviewKey+=1; const ratings=extractRatings(item.ratings)
           return (
@@ -52,15 +52,7 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
           )}
         )
       }
+      {(reviewsFromServer.length === 0 || !hasLoaded) && <NoReviewsMessage reviewArrayLength={reviewsFromServer.length} hasLoaded={hasLoaded}/>}
       </div> )
-    } else {
-        return(<h2 className='No-Reviews-Message'>{'No reviews have been published for this toilet: be the first'}</h2>)
-    }
+    
 }
-
-/*
-overallStar={item.ratings.overall}
-            cleanStar={item.ratings.cleanliness}
-            uxStar={item.ratings.experience}
-            decorStar={item.ratings.decor}
-*/
