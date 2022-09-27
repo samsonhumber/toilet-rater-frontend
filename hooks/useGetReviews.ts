@@ -9,6 +9,7 @@ import { ReviewObject } from '../components/review-list';
 const useGetReviews = function GetReviews(toiletName: string, gridRef: string) {
     const [reviewsFromServer, setReviewsFromServer] = useState<ReviewObject[]>([]);
     const [hasLoaded, setHasLoaded] = useState<boolean>(false);
+    const [needsRefresh, setNeedsRefresh] = useState<boolean>(false);
     useEffect(() => {
         async function getReviewsFromServer() {
             const urlStem = process.env.NEXT_PUBLIC_SERVER_API || "http://localhost:9000";
@@ -20,8 +21,8 @@ const useGetReviews = function GetReviews(toiletName: string, gridRef: string) {
             setReviewsFromServer(currentReviews.payload);
         }
         getReviewsFromServer();
-    }, [gridRef, toiletName]);
-    return {reviewsFromServer, hasLoaded}
+    }, [gridRef, toiletName, needsRefresh]);
+    return {reviewsFromServer, hasLoaded, setNeedsRefresh, needsRefresh}
 }
 
 export { useGetReviews }

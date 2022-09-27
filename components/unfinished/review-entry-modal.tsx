@@ -43,15 +43,9 @@ export default function ReviewEntryModal({toilet, gridRef}: {toilet: string, gri
   function starClickHandler(nextValue: number, prevValue: number, name: string) {
     setOverallRating(nextValue)
   }
-    /*function submitModalPost() {
-      if(unfinishedReview.user !== '' || unfinishedReview.ratings.length === 0){
-        console.log(`Review by ${unfinishedReview.user} submitted`)
-        setSubmittedReview({...unfinishedReview});
-        // Consider making a custom hook to post the review to the server and calling it here?
-      } else {
-        alert("Please ensure a valid username is provided and you have provided at least 1 star rating")
-      }   
-    }*/
+    function submitPost() {
+      
+    }
     const { isOpen, onOpen, onClose } = useDisclosure();
     const handleCommentChange = (event: any) => setComment(event.target.value)
     return (
@@ -89,7 +83,7 @@ export default function ReviewEntryModal({toilet, gridRef}: {toilet: string, gri
             </ModalBody>
   
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={()=>{}}>
+              <Button colorScheme='blue' mr={3} onClick={submitPost}>
                 Post
               </Button>
               <Button onClick={onClose} variant='ghost'>Cancel</Button>
