@@ -3,8 +3,10 @@ import ReviewTile from './review-tile';
 import { useGetReviews } from '../hooks/useGetReviews'
 import NoReviewsMessage from './unfinished/no-reviews-message';
 import StarRatingComponent from 'react-star-rating-component';
+import ReactStars from 'react-stars'
 import { 
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, Input
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, 
+  FormLabel, useDisclosure, Button, FormControl, Input, Textarea
 } from '@chakra-ui/react';
 
 type RatingArray = Object[];
@@ -39,6 +41,7 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
   const [comment, setComment] = useState<string>('');
   const {reviewsFromServer, hasLoaded, setNeedsRefresh, needsRefresh} = useGetReviews(toiletName, gridRef);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [overallRating, setOverallRating] = useState<number>(0);
 
   async function onSubmit() {
     const serverUrl = process.env.NEXT_PUBLIC_SERVER_API || "http://localhost:9000";
@@ -50,7 +53,7 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
        mode: 'cors',
        body: JSON.stringify(review)
       });
-    //console.log(JSON.stringify(review));
+    console.log(JSON.stringify(review));
     setNeedsRefresh(!needsRefresh);
     onClose();
   }
@@ -63,9 +66,27 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
     setComment((e.target as HTMLInputElement).value)
     console.log("comment:", (e.target as HTMLInputElement).value)
   }
-  function starClickHandler(nextValue: number, prevValue: number, name: string) {
-    setRatings([...ratings, {[name]: nextValue}]);
+  
+  function onRatingChange(newRating: number, criterion: string) {
+    console.log(criterion, newRating);
+    switch (criterion) {
+      case 'Overall':
+        setOverallRating(newRating);
+        break;
+      case 'Cleanliness':
+        console.log('cleanliness');
+        break;
+    }
+    
+    let ratingsWithoutCriterion = ratings.filter((ratingObject)=>{return (Object.keys(ratingObject)[0] != criterion)});
+    const newRatingObject = {[criterion]: newRating};
+    console.log(ratingsWithoutCriterion, newRatingObject);
+    ratingsWithoutCriterion.push(newRatingObject);
+    setRatings(ratingsWithoutCriterion);
+    console.log('Ratings is now', ratings);
   }
+
+  
 
     function extractRatings(ratingArray: RatingArray) {
         let ratings: {[key: string]: number} = {};
@@ -78,7 +99,8 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
     }
 
     let reviewKey = -1;
-  console.log(reviewsFromServer.length, hasLoaded);
+  //console.log(reviewsFromServer.length, hasLoaded);
+
   return( <div className="bootcamper-display">
     <Button onClick={onOpen}>Open Modal</Button>
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -87,26 +109,15 @@ export default function ReviewList({toiletName, gridRef}: propsType) {
         <ModalHeader>Write your review</ModalHeader>
         <ModalCloseButton />
           <ModalBody>
-            <FormControl>
+            <FormControl isInvalid={userName.length<1} isRequired>
               <Input placeholder='Username' onChange={updateUserName}/>
-              <StarRatingComponent name={'Overall'} value={5} onStarClick={starClickHandler}
-              renderStarIcon={(index, value) => {
-                return (
-                  <span>
-                    <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
-                  </span>
-                );
-              }}
-              renderStarIconHalf={() => {
-                return (
-                  <span>
-                    <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
-                    <span><i className="fas fa-star-half" /></span>
-                  </span>
-                );
-              }}
-              />
-              <Input onChange={updateComment} placeholder='Comment'/>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Overall</FormLabel>
+              <ReactStars value={overallRating} count={5} onChange={(newStar: number)=>{onRatingChange(newStar, 'Overall')}} size={24} color2={'#ffd700'} />
+            </FormControl>
+            <FormControl isInvalid={comment.length<1 && ratings.length<1}>
+              <Textarea onChange={updateComment} placeholder='Comment'/>
             </FormControl>
           </ModalBody>
         <ModalFooter>
